@@ -1,0 +1,8 @@
+---
+- name: ansible_mde
+  src: https://github.com/danmwallace/ansible_mde
+  scm: git
+
+- name: ansible_azurearc
+  src: https://github.com/danmwallace/ansible_azurearc
+  scm: git
