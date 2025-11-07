@@ -4,7 +4,7 @@ set -e  # Exit on error
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PARENT_DIR="$(dirname "$SCRIPT_DIR")"
-VENV_DIR="$PARENT_DIR/venv"
+VENV_DIR="$SCRIPT_DIR/venv"
 
 echo "=========================================="
 echo "Ansible Environment Setup"

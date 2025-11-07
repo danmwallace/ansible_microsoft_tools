@@ -3,6 +3,6 @@
   src: https://github.com/danmwallace/ansible_mde
   scm: git
 
-- name: ansible_azurearc
-  src: https://github.com/danmwallace/ansible_azurearc
+- name: ansible_azure_arc
+  src: https://github.com/danmwallace/ansible_azure_arc
   scm: git
