@@ -71,7 +71,35 @@ It will:
 
 ## Step 1.5: Place mdatp_onboard.json in roles/ansible_mde/files/
 
-# Step 2: Using the Playbooks
+# Step 2: Set up your service account on the server(s)
+
+The `ansible.cfg` file is assuming you have a user on the target server(s) named `ansible` that will elevate to `root` via `sudo`. If you look at the `ansible.cfg` file:
+```
+[defaults]
+remote_user = ansible
+
+...
+
+[privilege_escalation]
+become = True
+become_method = sudo
+become_user = root
+become_ask_pass = False
+```
+
+To add a user named `ansible` on the server, you would:
+1. Add the user, e.g `sudo adduser ansible`
+3. Add the SSH key for the user to their `authorized_keys` file, found in `/home/username/.ssh/authorized_keys`
+2. Add the user to `sudo`, e.g `sudo usermod -aG sudo ansible`
+3. (Optional, but recommended) Create a file within `/etc/sudoers.d/` named after the user, e.g `/etc/sudoers.d/ansible`, with `NOPASSWD` enabled:
+```
+ansible ALL=(ALL) NOPASSWD:ALL
+```
+
+This is ideal for automation. **If you do not create this file, you will need to pass `--ask-become-pass` while running the playbook.** You will need to modify `install-arc-and-mde.sh` accordingly.
+
+
+# Step 3: Using the Playbooks
 
 ## Installing Azure Arc + DFE (Common use case)
 
