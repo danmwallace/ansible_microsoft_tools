@@ -2,6 +2,14 @@
 
 This repository will help you with setting up an Ansible environment to use roles to configure Microsoft Tools, such as Azure Arc and Microsoft Defender for Endpoint. The repository is meant as a "quick start" environment and was intended for people who are new to Ansible and learn how to use it.
 
+## Included Roles
+
+The following roles will be installed for you when running the included `setup.sh` script:
+* [ansible_mde](https://github.com/danmwallace/ansible_azure_arc) : Role for installing Microsoft Defender for Endpoint on Linux
+* [ansible_azure_arc](https://github.com/danmwallace/ansible_mde) : Role for installing Azure Arc on Linux
+
+Both of these are slightly modified versions of plays that are provided by Microsoft, made for for use as re-usable roles. In some cases, errors (found in the MS documentation) have been fixed when necessary, unfortunately I did a poor job of capturing them. 
+
 # Quick Start
 
 ## macOS / Linux
