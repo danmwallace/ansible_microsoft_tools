@@ -103,7 +103,7 @@ This is ideal for automation. **If you do not create this file, you will need to
 
 ## Installing Azure Arc + DFE (Common use case)
 
-The easiest way to run the playbook is likely to modify the included `install-arc-and-mde.sh` script. There, you can easily modify the variables to suit your specific requirements, then just run the script via `bash run-playbook.sh`
+The easiest way to run the playbook is likely to modify the included `install-arc-and-mde.sh` script. There, you can easily modify the variables to suit your specific requirements, then just run the script via `bash install-arc-and-mde.sh`
 
 Alternatively, from the `ansible_microsoft_tools` folder you can run the following command in terminal:
 ```
