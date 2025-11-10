@@ -17,7 +17,7 @@ Both of these are slightly modified versions of plays that are provided by Micro
 Run the included bash script on macOS or Linux:
 * `setup.sh` Can be run easily with `bash`
 
-These will configure a Python virtual environment for you, install Ansible, and install the included Ansible roles for managing a Microsoft Entra environment. The python script is generally meant for Windows but I haven't tested it yet.
+These will configure a Python virtual environment for you, install Ansible, and install the included Ansible roles for managing a Microsoft Entra environment. 
 
 Assuming you're in terminal on macOS, simply:
 ```
