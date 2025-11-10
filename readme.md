@@ -1,6 +1,6 @@
 # Ansible Tools for Microsoft
 
-This repository will help you with setting up an Ansible environment to use roles to configure Microsoft Tools, such as Azure Arc and Microsoft Defender for Endpoint.
+This repository will help you with setting up an Ansible environment to use roles to configure Microsoft Tools, such as Azure Arc and Microsoft Defender for Endpoint. The repository is meant as a "quick start" environment and was intended for people who are new to Ansible and learn how to use it.
 
 # Quick Start
 
@@ -25,9 +25,9 @@ I'll need to update these instructions but essentially:
 * Install `ansible` with pip
 * Execute `ansible-galaxy install -r requirements.yml` to install the roles
 
-# Pre-requisites
+# Step 1: Pre-requisites
 
-## Azure Arc (Role: ansible_azure_arc)
+## Step 1.1: Azure Arc (Role: ansible_azure_arc)
 
 You will need to create a [Service Principal for onboarding](https://learn.microsoft.com/en-us/azure/azure-arc/servers/onboard-service-principal#create-a-service-principal-for-onboarding-at-scale) and collect the necessary variables:
 ```
@@ -39,22 +39,66 @@ subscription_id: "{{ azure_subscription_id }}"
 location: "{{ azure_location }}"
 ```
 
-See the *Running the playbooks* section for how to use these.
+Write down the above as you will use them later. See the *Running the playbooks* section for how to use these.
 
-## Microsoft Defender for Endpoint on Linux (Role: ansible_mde)
+## Step 1.2: Microsoft Defender for Endpoint on Linux (Role: ansible_mde)
 
 You will need to:
 1. Download the onboarding package from Microsoft Defender Security Center. This includes the `mdatp_onboard.json` file which will be used to onboard the device with MDE. 
 2. Extract the `mdatp_onboard.json` file from the `WindowsDefenderATPOnboardingPackage.zip` file you downloaded. See [here](https://learn.microsoft.com/en-us/defender-endpoint/linux-install-with-ansible#download-the-onboarding-package-applicable-to-both-the-methods) for more information.
-3. Fetch the latest `mde_installer.sh` script, located here:
-https://raw.githubusercontent.com/microsoft/mdatp-xplat/refs/heads/master/linux/installation/mde_installer.sh
 
-Place the `mde_installer.sh` and `mdatp_onboard.json` within `roles/ansible_mde/files/`
+Place the `mdatp_onboard.json` aside for now.
 
-# Using the Playbooks
+## Step 1.3: Adding your Hosts to hosts.ini
+
+Update the `hosts.ini` file and add your hosts:
+```
+myserver.example.com ansible_host=myserver.example.com
+```
+Replace myserver.example.com with the FQDN and `ansible_host=myserver.example.com` can either point to an FQDN or an IP address.
+
+## Step 1.4: Run the setup script
+
+The included `setup.sh` script will set up an environment for you to run Ansible, and will also install the required roles. **It has only been tested on macOS and Linux.**
+
+Run the script via `bash setup.sh` 
+
+It will:
+1. Set up a Python virtual environment in a folder named `venv`
+2. Install the `roles` via `ansible-galaxy install -r requirements.yml` (roles are on GitHub)
+3. Fetch the latest version of the `mde_installer.sh` script and place it within `roles/ansible-mde/files/mde_installer.sh` for use by the `ansible_mde` role.
+4. Activate the Python virtual environment so you can run the playbook.
+
+## Step 1.5: Place mdatp_onboard.json in roles/ansible_mde/files/
+
+# Step 2: Using the Playbooks
 
 ## Installing Azure Arc + DFE (Common use case)
-From the `ansible_microsoft_tools` folder:
-`ansible-playbook -i hosts.ini playbooks/common.yml --extra-vars "service_principal_id=<service_principal_id> service_principal_secret=<service_principal_secret> resource_group=<name_of_rg> tenant_id=<tenant_id> subscription_id=<subscription_id> location=<location>"`
 
-Alternatively, you could also modify the `playbooks/common.yml` file and replace the variables in quotes, and then run it via `ansible-playbook -i hosts.ini playbooks/common.yml`
+The easiest way to run the playbook is likely to modify the included `install-arc-and-mde.sh` script. There, you can easily modify the variables to suit your specific requirements, then just run the script via `bash run-playbook.sh`
+
+Alternatively, from the `ansible_microsoft_tools` folder you can run the following command in terminal:
+```
+ansible-playbook -i hosts.ini playbooks/common.yml --extra-vars \
+  "azure_service_principal_id=<service_principal_id> \
+  azure_service_principal_secret=<service_principal_secret> \
+  azure_resource_group=<name_of_rg> \
+  azure_tenant_id=<tenant_id> \
+  azure_subscription_id=<subscription_id> \
+  azure_location=<location>"
+```
+
+Note: The `\` character above is to make the command more readable, simply remove the character if you're running this in one line in terminal.
+
+You could also modify the `playbooks/common.yml` file and replace the variables in quotes, and then run it via `ansible-playbook -i hosts.ini playbooks/common.yml`, however if you're going to do this I highly urge you to look into setting up and using an Ansible Vault for storing the `service_principal_secret`, so that you don't accidentally commit secrets to code.
+
+### Possible Errors
+
+#### Playbook failed on `TASK [ansible_azure_arc : Connect to Azure Arc]` task
+
+Check the error output. If Arc is already installed, you may see an error message such as:
+```
+level=fatal msg=\"Machine 'myserver.myorg.com' is already onboarded to Microsoft.HybridCompute. If you want to onboard with a different name, run azcmagent disconnect, sudo systemctl restart and then azcmagent connect\""]
+```
+
+If this is the case, no action is required by default, and this particular task has `ignore_errors: true` set to allow it to continue. **If you need to onboard the server with another name, you will need to follow the instructions above**. The playbook does not currently support this. If there is a need, I can look into it further.
