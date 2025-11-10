@@ -5,7 +5,7 @@
   become: true
   roles:
     - role: ansible_azure_arc
-      tags: ['azure-arc']
+      tags: ['azure-arc', 'arc']
       vars:
         azure:
           service_principal_id: "{{ azure_service_principal_id }}"
@@ -16,7 +16,7 @@
           location: "{{ azure_location }}"
     
     - role: ansible_mde
-      tags: ['security', 'defender']
+      tags: ['defender', 'dfe']
       vars:
         onboarding_json: "files/mdatp_onboard.json"
         mde_installer_script: "files/mde_installer.sh"

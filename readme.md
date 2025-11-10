@@ -39,7 +39,7 @@ subscription_id: "{{ azure_subscription_id }}"
 location: "{{ azure_location }}"
 ```
 
-Write down the above as you will use them later. See the *Running the playbooks* section for how to use these.
+Write down the above as you will use them later. See the *Using the playbooks* section for how to use these.
 
 ## Step 1.2: Microsoft Defender for Endpoint on Linux (Role: ansible_mde)
 
