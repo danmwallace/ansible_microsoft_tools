@@ -130,3 +130,7 @@ level=fatal msg=\"Machine 'myserver.myorg.com' is already onboarded to Microsoft
 ```
 
 If this is the case, no action is required by default, and this particular task has `ignore_errors: true` set to allow it to continue. **If you need to onboard the server with another name, you will need to follow the instructions above**. The playbook does not currently support this. If there is a need, I can look into it further.
+
+# Questions
+
+If you get stuck or run into an undocumented error, please create an issue.
